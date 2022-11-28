@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import { addFileController } from './src/controllers/file-upload-controller.js';
 import fileUpload from 'express-fileupload';
 import mongoose from 'mongoose';
+import { validateAuthToken } from './src/filters/authFilter.js';
 
 const CONTEXT_PATH = '/file-upload';
 const UPLOADED_ALIAS = '/files';
@@ -14,7 +15,7 @@ const app = express();
 mongoose.Promise = global.Promise;;
 
 mongoose.connect(MONGO_STR);
-app.use(CONTEXT_PATH + UPLOADED_ALIAS,express.static('uploads'));
+app.use(CONTEXT_PATH + UPLOADED_ALIAS, validateAuthToken, express.static('uploads'));
 
 app.use(fileUpload());
 app.use(bodyParser.json());
